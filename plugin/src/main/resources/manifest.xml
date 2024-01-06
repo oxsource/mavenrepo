@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+    <repo name="abc:release" url="git@github.com:abc/xx-release.git" priority="999" type="git" branch="dev"/>
+    <repo name="abc:snapshot" url="git@github.com:abc/xx-snapshot.git" type="git"/>
+    <repo name="jitpack" url="https://jitpack.io"/>
+    <repo name="local" url="/Users/xyz/Develop/repos"/>
+</manifest>

@@ -1,0 +1,13 @@
+buildscript {
+    ext {
+        LOCAL_FAKE_REPO = ".repo"
+    }
+    repositories {
+        google()
+        mavenCentral()
+        maven { url LOCAL_FAKE_REPO }
+    }
+    dependencies {
+        classpath('pizzk.gradle.plugin:maven-repo:1.0.0')
+    }
+}

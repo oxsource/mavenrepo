@@ -1,0 +1,34 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
+    id 'pizzk.gradle.maven.repo'
+}
+
+group = 'pizzk.gradle.plugin'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(19)
+}
+
+mavenrepo {
+    changing(true)
+    manifests {
+        it.local()
+        it.gitee(false)
+    }
+    locate {
+        it.name("local:snapshot")
+        it.name("jitpack")
+    }
+}
