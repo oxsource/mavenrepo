@@ -1,13 +1,21 @@
+apply from: 'local.gradle'
 buildscript {
     ext {
-        LOCAL_FAKE_REPO = ".repo"
+        maven_publish_local_name = 'Temp'
+        maven_publish_local_path = (new File(project.rootDir, '.repo/release'))
+        maven_repo_groupId = 'io.github.oxsource'
+        maven_repo_artifactId = 'maven-repo-plugin'
+        maven_repo_version = '1.0.0'
     }
     repositories {
         google()
         mavenCentral()
-        maven { url LOCAL_FAKE_REPO }
+        maven {
+            name maven_publish_local_name
+            url uri(maven_publish_local_path)
+        }
     }
     dependencies {
-        classpath('pizzk.gradle.plugin:maven-repo:1.0.0')
+        classpath("$maven_repo_groupId:$maven_repo_artifactId:$maven_repo_version")
     }
 }

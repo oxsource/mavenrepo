@@ -14,5 +14,8 @@ class MavenRepoPlugin : Plugin<Project> {
         const val NAME = "mavenrepo"
     }
 
-    override fun apply(project: Project) = MavenRepoTask(project).setup()
+    override fun apply(project: Project) {
+        project.extensions.add(MavenRepoExt.NAME, MavenRepoExt())
+        MavenRepoTask(project).setup()
+    }
 }

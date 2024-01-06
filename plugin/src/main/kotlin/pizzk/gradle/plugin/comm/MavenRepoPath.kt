@@ -12,6 +12,12 @@ object MavenRepoPath {
     const val MANIFEST_DIR = "manifests"
     const val CONTENTS_DIR = "contents"
     fun rootDir(): File = File(System.getProperty(JVM_USER_HOME), BASE_DIR)
+
+    fun namespaceDir(dir: File, name: String): File {
+        val namespace = name.split(Repository.NAMESPACE_SPLIT)
+        return File(dir, namespace.joinToString(separator = File.separator))
+    }
+
     fun http(path: String): Boolean = path.startsWith(HTTP, ignoreCase = true)
     fun download(url: String, dir: File, changing: Boolean): File? {
         return kotlin.runCatching {

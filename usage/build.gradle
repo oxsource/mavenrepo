@@ -22,7 +22,7 @@ kotlin {
 }
 
 mavenrepo {
-    changing(true)
+    changing(false)
     manifests {
         it.local()
         it.gitee(false)
@@ -30,5 +30,12 @@ mavenrepo {
     locate {
         it.name("local:snapshot")
         it.name("jitpack")
+    }
+}
+
+task testFindMavenLocalURI {
+    doLast {
+        String name = 'local:snapshot'
+        println("find maven repo `$name` uri: ${MavenRepoExt.findMavenLocalURI(name)}")
     }
 }

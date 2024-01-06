@@ -25,7 +25,7 @@ dependencies {
 gradlePlugin {
     // Define the plugin
     plugins {
-        greeting {
+        pizzk {
             id = 'pizzk.gradle.maven.repo'
             implementationClass = 'pizzk.gradle.plugin.MavenRepoPlugin'
         }
@@ -35,13 +35,46 @@ gradlePlugin {
 publishing {
     publications {
         pizzk(MavenPublication) {
-            groupId = 'pizzk.gradle.plugin'
-            artifactId = 'maven-repo'
-            version = '1.0.0'
+            groupId = maven_repo_groupId
+            artifactId = maven_repo_artifactId
+            version = maven_repo_version
+            pom {
+                name = 'pizzk.gradle.maven.repo'
+                description = 'A gradle plugin manage multi maven repo'
+                url = 'https://github.com/oxsource/mavenrepo'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'pizzk'
+                        name = 'Feng Peng'
+                        email = 'fengpeng726676435@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/oxsource/mavenrepo.git'
+                    developerConnection = 'scm:git:git@github.com:oxsource/mavenrepo.git'
+                    url = 'https://github.com/oxsource/mavenrepo'
+                }
+            }
             from components.java
         }
     }
     repositories {
-        maven { url "$rootDir/$LOCAL_FAKE_REPO" }
+        mavenCentral {
+            name 'mavenCentral'
+            credentials {
+                username OSSRH_USERNAME
+                password OSSRH_PASSWORD
+            }
+        }
+        maven {
+            name maven_publish_local_name
+            url uri(uri(maven_publish_local_path))
+        }
     }
 }

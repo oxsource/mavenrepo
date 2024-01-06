@@ -57,19 +57,18 @@ object GitCommand {
 
     fun sync(repository: Repository, dir: File): Repository.Maven? {
         if (!dir.isDirectory) throw Exception("${dir.path} is not a directory.")
-        val namespace = repository.name.split(Repository.NAMESPACE_SPLIT)
-        val file = File(dir, namespace.joinToString(separator = File.separator))
-        val url = remoteUrl(file)
+        val mavenDir = MavenRepoPath.namespaceDir(dir, repository.name)
+        val url = remoteUrl(mavenDir)
         val success = if (repository.url != url) {
-            if (file.exists()) {
+            if (mavenDir.exists()) {
                 println("${dir.absolutePath} remoteUrl mismatch, will be delete to update")
-                file.deleteRecursively()
+                mavenDir.deleteRecursively()
             }
-            clone(file, repository.url, repository.branch)
+            clone(mavenDir, repository.url, repository.branch)
         } else {
-            pull(file, repository.branch)
+            pull(mavenDir, repository.branch)
         }
         if (!success) return null
-        return Repository.Maven(repository.name, file.toURI())
+        return Repository.Maven(repository.name, mavenDir.toURI())
     }
 }
