@@ -10,7 +10,7 @@ class MavenRepoExt {
         const val NAME = "MavenRepoExt"
     }
 
-    fun findMavenLocalURI(name: String?): URI? {
+    fun path(name: String?): URI? {
         return kotlin.runCatching {
             if (name.isNullOrEmpty()) return@runCatching null
             val rootDir = MavenRepoPath.rootDir()

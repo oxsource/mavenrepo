@@ -10,8 +10,7 @@ plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
     id 'signing'
-    // Apply the Kotlin JVM plugin to add support for Kotlin.
-    alias(libs.plugins.jvm)
+    id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
 }
 
 repositories {
@@ -20,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
 }
 
 gradlePlugin {
@@ -30,6 +29,15 @@ gradlePlugin {
             id = 'pizzk.gradle.maven.repo'
             implementationClass = 'pizzk.gradle.plugin.MavenRepoPlugin'
         }
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 

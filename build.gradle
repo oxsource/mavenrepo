@@ -1,12 +1,13 @@
-apply from: 'local.gradle'
 buildscript {
     ext {
+        kotlin_version = '1.6.21'
+        okhttp_version = '4.10.0'
         maven_publish_local_name = 'Temp'
-        maven_publish_local_path = (new File(project.rootDir, '.repo/release'))
+        maven_publish_local_path = (new File(project.rootDir, '.repo'))
         maven_repo_groupId = 'io.github.oxsource'
         maven_repo_artifactId = 'maven-repo-plugin'
         maven_repo_version = '1.0.0'
-        maven_repo_signing = true
+        maven_repo_signing = false
     }
     repositories {
         google()
