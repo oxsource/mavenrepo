@@ -1,9 +1,10 @@
 package pizzk.gradle.plugin
 
 import org.gradle.api.Project
-import pizzk.gradle.plugin.comm.MavenRepoPath
-import pizzk.gradle.plugin.comm.Repository
+import pizzk.gradle.plugin.support.MavenRepoPath
+import pizzk.gradle.plugin.support.Repository
 import pizzk.gradle.plugin.extension.Manifest
+import pizzk.gradle.plugin.extension.Namespace
 import java.io.File
 import java.net.URI
 
@@ -41,7 +42,7 @@ class MavenRepoApi(project: Project) {
         println(manifests.joinToString(separator = "\n", transform = File::getPath))
         println()
         //resolve and filter repos
-        val namespaces = config.namespaces().toSet()
+        val namespaces = config.namespaces().keys.toSet()
         println("2/$total. locate namespaces:")
         if (namespaces.isEmpty()) return emptyList()
         println(namespaces.joinToString())
@@ -73,7 +74,7 @@ class MavenRepoApi(project: Project) {
     fun uri(name: String?): URI? = resolve(force = false).firstOrNull { it.name == name }?.url
     interface Config {
         fun manifests(): Map<String, Boolean>
-        fun namespaces(): Set<String>
+        fun namespaces(): Map<String, Namespace.Policy>
         fun changing(): Boolean
     }
 }

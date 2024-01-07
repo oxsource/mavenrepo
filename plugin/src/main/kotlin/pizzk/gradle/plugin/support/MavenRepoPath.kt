@@ -1,4 +1,4 @@
-package pizzk.gradle.plugin.comm
+package pizzk.gradle.plugin.support
 
 import okhttp3.OkHttpClient
 import okhttp3.Request

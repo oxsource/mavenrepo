@@ -1,7 +1,7 @@
 package pizzk.gradle.plugin.task
 
 import org.gradle.api.Task
-import pizzk.gradle.plugin.comm.MavenRepoPath
+import pizzk.gradle.plugin.support.MavenRepoPath
 import pizzk.gradle.plugin.extension.Manifest
 import java.io.File
 import java.io.InputStreamReader

@@ -32,6 +32,10 @@ gradlePlugin {
     }
 }
 
+java {
+    withSourcesJar()
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -46,7 +50,7 @@ publishing {
         pizzk(MavenPublication) {
             groupId = maven_repo_groupId
             artifactId = maven_repo_artifactId
-            version = "1.0.1"
+            version = maven_repo_version
             pom {
                 name = 'pizzk.gradle.maven.repo'
                 description = 'A gradle plugin manage multi maven repo'
@@ -75,7 +79,8 @@ publishing {
     }
     repositories {
         mavenCentral {
-            name 'mavenCentral'
+            name 'mavenCenter'
+            url(maven_repo_snapshot ? OSSRH_MVN_SNAP_URL : OSSRH_MVN_URL)
             credentials {
                 username OSSRH_USERNAME
                 password OSSRH_PASSWORD

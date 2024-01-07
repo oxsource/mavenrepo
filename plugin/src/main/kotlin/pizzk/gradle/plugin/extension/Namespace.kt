@@ -1,20 +1,17 @@
 package pizzk.gradle.plugin.extension
 
 class Namespace {
-    private val values: MutableSet<String> = mutableSetOf()
-    fun name(value: String?) {
-        value ?: return
-        val s = value.trim()
-        if (s.isEmpty()) return
-        values.add(s)
+    enum class Policy(val desc: String) {
+        ALL("ALL"), PROJECT("PROJECT"), NONE("NONE")
     }
 
-    fun names(vararg values: String) {
-        if (values.isEmpty()) return
-        values.forEach(this::name)
+    private val values: MutableMap<String, Policy> = mutableMapOf()
+    fun include(names: List<String>, policy: Policy) {
+        names.map(String::trim).filter(String::isNotEmpty).forEach { values[it] = policy }
     }
 
-    fun value(): Set<String> = values
+    internal fun value(): Map<String, Policy> = values
+    override fun toString(): String = value().map { "${it.key}|${it.value.desc}" }.joinToString()
 
-    override fun toString(): String = value().joinToString()
+    class Group(val policy: Policy, val names: Array<String>)
 }

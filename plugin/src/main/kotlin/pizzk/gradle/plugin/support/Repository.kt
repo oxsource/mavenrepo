@@ -1,4 +1,4 @@
-package pizzk.gradle.plugin.comm
+package pizzk.gradle.plugin.support
 
 import org.gradle.api.Action
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository

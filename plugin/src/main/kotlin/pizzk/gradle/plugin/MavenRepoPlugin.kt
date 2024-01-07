@@ -3,8 +3,9 @@
  */
 package pizzk.gradle.plugin
 
-import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Project
+import pizzk.gradle.plugin.support.MavenInject
 
 /**
  * 'maven repo' plugin.
@@ -17,5 +18,6 @@ class MavenRepoPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.extensions.add(MavenRepoApi.NAME, MavenRepoApi(project))
         MavenRepoTask(project).setup()
+        project.afterEvaluate(MavenInject()::apply)
     }
 }

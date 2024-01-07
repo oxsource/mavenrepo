@@ -1,4 +1,4 @@
-package pizzk.gradle.plugin.comm
+package pizzk.gradle.plugin.support
 
 import java.io.BufferedReader
 import java.io.File

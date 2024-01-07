@@ -16,18 +16,17 @@ dependencies {
 mavenrepo {
     changing(false)
     manifests {
-        it.local()
-        it.gitee(false)
+        manifestLocal()
+        manifestGitee()
     }
-    locate {
-        it.name("local:snapshot")
-        it.name("jitpack")
+    namespace {
+        include(["local:snapshot", "jitpack"])
     }
 }
 
 task findMavenLocalURI {
     doLast {
         String name = 'local:snapshot'
-        println("find maven repo `$name` uri: ${MavenRepoExt.path(name)}")
+        println("find maven repo `$name` uri: ${MavenRepoApi.uri(name)}")
     }
 }

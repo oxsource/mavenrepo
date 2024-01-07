@@ -17,7 +17,7 @@ class Manifest {
         values[s] = changing
     }
 
-    fun value(): Map<String, Boolean> = values
+    internal fun value(): Map<String, Boolean> = values
 
     override fun toString(): String = value().map { "${it.key}|${it.value}" }.joinToString()
 }
