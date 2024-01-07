@@ -17,7 +17,7 @@ class Repository(
 
     override fun toString(): String = "$name|$url|$priority"
 
-    class Maven(private val name: String, private val url: URI) : Action<MavenArtifactRepository> {
+    class Maven(val name: String, val url: URI) : Action<MavenArtifactRepository> {
         override fun execute(el: MavenArtifactRepository) {
             el.name = name
             el.url = url

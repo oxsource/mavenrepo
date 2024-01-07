@@ -15,7 +15,7 @@ class MavenRepoPlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        project.extensions.add(MavenRepoExt.NAME, MavenRepoExt())
+        project.extensions.add(MavenRepoApi.NAME, MavenRepoApi(project))
         MavenRepoTask(project).setup()
     }
 }

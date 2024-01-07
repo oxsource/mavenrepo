@@ -46,7 +46,7 @@ publishing {
         pizzk(MavenPublication) {
             groupId = maven_repo_groupId
             artifactId = maven_repo_artifactId
-            version = maven_repo_version
+            version = "1.0.1"
             pom {
                 name = 'pizzk.gradle.maven.repo'
                 description = 'A gradle plugin manage multi maven repo'
