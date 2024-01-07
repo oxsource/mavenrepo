@@ -6,6 +6,7 @@ buildscript {
         maven_repo_groupId = 'io.github.oxsource'
         maven_repo_artifactId = 'maven-repo-plugin'
         maven_repo_version = '1.0.0'
+        maven_repo_signing = true
     }
     repositories {
         google()

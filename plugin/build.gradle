@@ -9,6 +9,7 @@ plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     id 'java-gradle-plugin'
     id 'maven-publish'
+    id 'signing'
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     alias(libs.plugins.jvm)
 }
@@ -77,4 +78,10 @@ publishing {
             url uri(uri(maven_publish_local_path))
         }
     }
+}
+
+signing {
+    required { maven_repo_signing && gradle.taskGraph.hasTask("publish") }
+    useGpgCmd()
+    sign publishing.publications.pizzk
 }
