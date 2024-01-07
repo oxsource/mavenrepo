@@ -17,19 +17,27 @@ class HelpTask : TaskAction() {
             val manifestDir = File(rootDir, MavenRepoPath.MANIFEST_DIR)
             val contentDir = File(rootDir, MavenRepoPath.CONTENTS_DIR)
             var i = 1
-            println("${i++}. rootDir: [${rootDir.path}];")
-            println("${i++}. manifests { it.local() }: [${File(manifestDir, Manifest.NAME)}];")
-            println("${i++}. manifests { it.gitee([changing]) }: built-it public manifest(ignore exist while changing is true)")
-            println("${i++}. manifests { it.url(<path>, [changing]) }: support local or http remote file;")
-            println("${i++}. manifest example:")
+            println("---BASIC--")
+            println("${i++}. local root dir: [${rootDir.path}];")
+            println("${i}. manifest.xml config reference:")
             val classLoader: ClassLoader = MavenRepoPath::class.java.getClassLoader()
             classLoader.getResourceAsStream("manifest.xml")?.use { ins ->
                 InputStreamReader(ins).readLines().forEach(System.out::println)
             }
-            println("${i++}. once plugin sync, it will collect manifest and locate choose matching repo;")
-            println("${i++}. then clone into local(${contentDir.path}) if need;")
-            println("${i++}. finally auto inject them into `project.repositories`;")
-            println("${i}. mavenrepo { changing(false) } can close auto resolve`.")
+            println()
+            i = 1
+            println("---USAGE--")
+            println("${i++}. manifestLocal(): `${File(manifestDir, Manifest.NAME)}`;")
+            println("${i++}. manifestGitee(changing: Boolean): `${Manifest.GITEE}`;")
+            println("${i++}. manifest(url: String, changing: Boolean): local or http ${Manifest.NAME};")
+            println("${i}. include(names: List<String>, global: Boolean): inject named repo into repositories for all or current project;")
+            println()
+            i = 1
+            println("---WORKFLOW--")
+            println("${i++}. collect manifests then choose matching repo via include name and priority;")
+            println("${i++}. clone or pull manifest git repo into(${contentDir.path}) sub dir;")
+            println("${i}. repo transform to `maven{name,url}` and inject into `repositories` via policy;")
+            println()
         }
     }
 }

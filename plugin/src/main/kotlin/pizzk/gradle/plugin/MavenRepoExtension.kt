@@ -15,7 +15,7 @@ abstract class MavenRepoExtension {
 
         override fun changing(): Boolean = changing
 
-        override fun toString(): String = "manifests: $manifests\nlocate: $namespace\nchanging: $changing"
+        override fun toString(): String = "manifests: [$manifests]\nnamespace: [$namespace]\nchanging: [$changing]"
     }
 
     fun manifests(block: Manifest.() -> Unit) = manifests.apply(block)
@@ -25,7 +25,7 @@ abstract class MavenRepoExtension {
     }
 
     fun manifestLocal() = manifests.local()
-    fun manifestGitee() = manifests.gitee()
+    fun manifestGitee(changing: Boolean) = manifests.gitee(changing)
     fun manifest(url: String, changing: Boolean) = manifests.url(url, changing)
     fun include(names: List<String>, global: Boolean) {
         val policy = if (global) Namespace.Policy.ALL else Namespace.Policy.PROJECT

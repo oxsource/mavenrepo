@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-    <repo name="abc:release" url="git@github.com:abc/xx-release.git" priority="999" type="git" branch="dev"/>
-    <repo name="abc:snapshot" url="git@github.com:abc/xx-snapshot.git" type="git"/>
+    <repo name="<group>[:product](required)" url="[git:|http:|file:](required)"
+          priority="[1-100](optional)" type="git(optional)" branch="dev(optional)"/>
     <repo name="jitpack" url="https://jitpack.io"/>
-    <repo name="local" url="/Users/xyz/Develop/repos"/>
+    <repo name="local:snapshot" url="~/Develop/.m2/" priority="10"/>
 </manifest>

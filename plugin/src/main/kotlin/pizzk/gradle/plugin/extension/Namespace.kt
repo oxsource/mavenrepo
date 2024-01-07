@@ -12,6 +12,4 @@ class Namespace {
 
     internal fun value(): Map<String, Policy> = values
     override fun toString(): String = value().map { "${it.key}|${it.value.desc}" }.joinToString()
-
-    class Group(val policy: Policy, val names: Array<String>)
 }

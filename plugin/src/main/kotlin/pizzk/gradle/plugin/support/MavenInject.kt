@@ -18,7 +18,7 @@ class MavenInject {
                 Namespace.Policy.ALL -> project.rootProject.allprojects.map { it.repositories }
                 else -> emptyList()
             }
-            println("`${el.name}` inject for `$policy`")
+            println("inject `${el.name}` for `$policy`")
             repos.forEach { it.maven(el) }
         }
     }

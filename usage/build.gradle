@@ -10,14 +10,13 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-}
+dependencies {}
 
 mavenrepo {
     changing(false)
     manifests {
         manifestLocal()
-        manifestGitee()
+        manifestGitee(false)
     }
     namespace {
         include(["local:snapshot", "jitpack"])

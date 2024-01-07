@@ -37,13 +37,13 @@ class MavenRepoApi(project: Project) {
                 else -> File(path)
             }
         }
-        println("1/$total. resolve manifests:")
+        println("1/$total. collect manifests:")
         if (manifests.isEmpty()) return emptyList()
         println(manifests.joinToString(separator = "\n", transform = File::getPath))
         println()
         //resolve and filter repos
         val namespaces = config.namespaces().keys.toSet()
-        println("2/$total. locate namespaces:")
+        println("2/$total. collect namespace:")
         if (namespaces.isEmpty()) return emptyList()
         println(namespaces.joinToString())
         println()
@@ -51,7 +51,7 @@ class MavenRepoApi(project: Project) {
         val groups = manifests.map(finder).flatten().groupBy { it.name }
         //choose best while exist repeat repo with same name
         val repos = groups.values.mapNotNull { it.maxByOrNull { e -> e.priority } }
-        println("3/$total. resolve repos:")
+        println("3/$total. choose repos:")
         if (repos.isEmpty()) return emptyList()
         println(repos.joinToString(separator = "\n", transform = Repository::toString))
         println()
@@ -62,7 +62,7 @@ class MavenRepoApi(project: Project) {
         val values = repos.mapNotNull { MavenRepoPath.sync(it, contentsDir) }
         println()
         //inject maven
-        println("5/$total. inject mavens:")
+        println("5/$total. transform mavens:")
         if (values.isEmpty()) return emptyList()
         println(values.joinToString(separator = "\n", transform = Repository.Maven::toString))
         println()

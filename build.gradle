@@ -6,9 +6,9 @@ buildscript {
         maven_publish_local_path = (new File(project.rootDir, '.repo'))
         maven_repo_groupId = 'io.github.oxsource'
         maven_repo_artifactId = 'maven-repo-plugin'
-        maven_repo_snapshot = true
-        maven_repo_version = '1.0.0' + (maven_repo_snapshot ? "-SNAPSHOT" : "")
-        maven_repo_signing = true
+        maven_repo_snapshot = false
+        maven_repo_version = '1.0.1' + (maven_repo_snapshot ? "-SNAPSHOT" : "")
+        maven_repo_signing = false
     }
     repositories {
         google()
