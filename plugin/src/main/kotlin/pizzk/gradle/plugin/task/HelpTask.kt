@@ -27,10 +27,12 @@ class HelpTask : TaskAction() {
             println()
             i = 1
             println("---USAGE--")
+            println("${i++}. changing(changing: Boolean): resolve ignore cache while set changing true;")
+            println("${i++}. scope(value: List<String>): extension api add to which projects;")
             println("${i++}. manifestLocal(): `${File(manifestDir, Manifest.NAME)}`;")
             println("${i++}. manifestGitee(changing: Boolean): `${Manifest.GITEE}`;")
             println("${i++}. manifest(url: String, changing: Boolean): local or http ${Manifest.NAME};")
-            println("${i}. include(names: List<String>, global: Boolean): inject named repo into repositories for all or current project;")
+            println("${i}. include(names: List<String>, scope: List<String>): inject named repo into which project's repositories;")
             println()
             i = 1
             println("---WORKFLOW--")

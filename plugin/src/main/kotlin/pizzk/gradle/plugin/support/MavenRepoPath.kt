@@ -2,6 +2,7 @@ package pizzk.gradle.plugin.support
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import pizzk.gradle.plugin.extension.Namespace
 import java.io.File
 import java.net.URL
 
@@ -14,8 +15,8 @@ object MavenRepoPath {
     fun rootDir(): File = File(System.getProperty(JVM_USER_HOME), BASE_DIR)
 
     fun namespaceDir(dir: File, name: String): File {
-        val namespace = name.split(Repository.NAMESPACE_SPLIT)
-        return File(dir, namespace.joinToString(separator = File.separator))
+        val parts = Namespace.split(name).toList()
+        return File(dir, parts.joinToString(separator = File.separator))
     }
 
     fun http(path: String): Boolean = path.startsWith(HTTP, ignoreCase = true)
@@ -41,7 +42,7 @@ object MavenRepoPath {
         return kotlin.runCatching {
             println("${repository.name} sync...")
             return@runCatching when {
-                repository.type == Repository.TYPE_GIT -> GitCommand.sync(repository, dir)
+                repository.type == Repository.Node.TYPE_GIT -> GitCommand.sync(repository, dir)
                 http(repository.url) -> Repository.Maven(repository.name, URL(repository.url).toURI())
                 else -> {
                     val file = File(repository.url)

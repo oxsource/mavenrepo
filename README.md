@@ -6,6 +6,14 @@ A simple gradle plugin:
 2. Very convenient for private git maven warehouse management.
 
 ## HOW
+*support gradle version('gradle/wrapper/gradle-wrapper.properties'): gradle-7.6+*
+<pre>
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-7.6-bin.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+</pre>
 
 1. project 'build.gradle'
 

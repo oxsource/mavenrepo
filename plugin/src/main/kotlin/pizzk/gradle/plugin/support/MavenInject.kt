@@ -1,25 +1,28 @@
 package pizzk.gradle.plugin.support
 
 import org.gradle.api.Project
-import org.gradle.api.artifacts.dsl.RepositoryHandler
 import pizzk.gradle.plugin.MavenRepoApi
 import pizzk.gradle.plugin.extension.Namespace
 
 class MavenInject {
     fun apply(project: Project) {
-        val api = MavenRepoApi.of(project) ?: return
+        val api = MavenRepoApi.get() ?: return
         val config = api.config()
         val namespaces = config.namespaces()
-        val values = api.resolve(config.changing())
-        values.forEach { el ->
-            val policy = namespaces[el.name] ?: return@forEach
-            val repos: List<RepositoryHandler> = when (policy) {
-                Namespace.Policy.PROJECT -> listOf(project.repositories)
-                Namespace.Policy.ALL -> project.rootProject.allprojects.map { it.repositories }
-                else -> emptyList()
+        val projects = project.rootProject.allprojects
+        val mavens = api.resolve(config.changing())
+        mavens.forEach { e ->
+            val scope = namespaces[e.name]
+            val wildcard = scope?.firstOrNull()
+            if (wildcard.isNullOrEmpty()) return@forEach
+            val targets = when (wildcard) {
+                Namespace.SCOPE_CUR -> setOf(project)
+                Namespace.SCOPE_ALL -> projects
+                else -> projects.filter { scope.contains(it.name) }
             }
-            println("inject `${el.name}` for `$policy`")
-            repos.forEach { it.maven(el) }
+            if (targets.isEmpty()) return@forEach
+            targets.forEach { it.repositories.maven(e) }
+            println("inject `${e.name}` for [${targets.joinToString { it.name }}]")
         }
     }
 }

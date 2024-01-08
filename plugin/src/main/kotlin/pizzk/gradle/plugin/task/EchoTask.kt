@@ -7,7 +7,7 @@ class EchoTask : TaskAction() {
     override fun title(): String = "Echo"
     override fun execute(task: Task) {
         super.execute(task)
-        val api = MavenRepoApi.of(task.project)
+        val api = MavenRepoApi.get()
         task.doLast { println(api?.config()?.toString().orEmpty()) }
     }
 }

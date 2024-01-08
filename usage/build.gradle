@@ -16,16 +16,15 @@ mavenrepo {
     changing(false)
     manifests {
         manifestLocal()
-        manifestGitee(false)
     }
     namespace {
-        include(["local:snapshot", "jitpack"])
+        include(['jitpack'], ['.'])
     }
 }
 
 task findMavenLocalURI {
     doLast {
-        String name = 'local:snapshot'
+        String name = 'jitpack'
         println("find maven repo `$name` uri: ${MavenRepoApi.uri(name)}")
     }
 }

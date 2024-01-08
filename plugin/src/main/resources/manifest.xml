@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-    <repo name="<group>[:product](required)" url="[git:|http:|file:](required)"
-          priority="[1-100](optional)" type="git(optional)" branch="dev(optional)"/>
+<group name="default">
     <repo name="jitpack" url="https://jitpack.io"/>
-    <repo name="local:snapshot" url="~/Develop/.m2/" priority="10"/>
+</group>
+<group name="<group>(required)" url="[git:|http:|file:](required)" type="[git](optional)">
+    <repo name="<name>(required)" url="[@](required|inherit)" type="[@](required|inherit)" branch="[*](optional)" priority="[1-100](optional)"/>
+</group>
 </manifest>

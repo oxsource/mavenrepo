@@ -10,4 +10,5 @@ plugins {
 rootProject.name = 'mavenrepo'
 include('plugin')
 include 'usage'
+include 'fake'
 

@@ -1,21 +1,37 @@
 package pizzk.gradle.plugin
 
 import org.gradle.api.Project
-import pizzk.gradle.plugin.support.MavenRepoPath
-import pizzk.gradle.plugin.support.Repository
 import pizzk.gradle.plugin.extension.Manifest
 import pizzk.gradle.plugin.extension.Namespace
+import pizzk.gradle.plugin.support.MavenRepoPath
+import pizzk.gradle.plugin.support.Repository
 import java.io.File
 import java.net.URI
 
-class MavenRepoApi(project: Project) {
+class MavenRepoApi(private val project: Project) {
     companion object {
         const val NAME = "MavenRepoApi"
-        fun of(project: Project): MavenRepoApi? = project.extensions.getByName(NAME) as? MavenRepoApi
+        private var handle: MavenRepoApi? = null
+        fun get(): MavenRepoApi? = handle
     }
 
-    private val config: Config = project.extensions.create(MavenRepoPlugin.NAME, MavenRepoExtension::class.java).config()
+    private val config: Config = MavenRepoExtension.create(project).config()
     private val caches: MutableList<Repository.Maven> = mutableListOf()
+    internal fun extend() {
+        project.afterEvaluate {
+            val scope = config.scope()
+            val wildcard = scope.firstOrNull()
+            val targets = when {
+                wildcard.isNullOrEmpty() -> setOf(project)
+                wildcard == Namespace.SCOPE_ALL -> setOf(project.rootProject)
+                else -> project.rootProject.allprojects.filter { it.name == project.name || scope.contains(it.name) }
+            }
+            handle = this
+            targets.forEach { it.extensions.add(NAME, this) }
+            println("extend `$NAME` for [${targets.joinToString { it.name }}]")
+        }
+    }
+
     fun config(): Config = config
     fun resolve(force: Boolean = true): List<Repository.Maven> {
         if (!force && caches.isNotEmpty()) return caches
@@ -47,7 +63,7 @@ class MavenRepoApi(project: Project) {
         if (namespaces.isEmpty()) return emptyList()
         println(namespaces.joinToString())
         println()
-        val finder: (File) -> List<Repository> = { Repository.find(it, namespaces::contains) }
+        val finder: (File) -> List<Repository> = { Repository.find(it, namespaces) }
         val groups = manifests.map(finder).flatten().groupBy { it.name }
         //choose best while exist repeat repo with same name
         val repos = groups.values.mapNotNull { it.maxByOrNull { e -> e.priority } }
@@ -73,8 +89,9 @@ class MavenRepoApi(project: Project) {
 
     fun uri(name: String?): URI? = resolve(force = false).firstOrNull { it.name == name }?.url
     interface Config {
+        fun scope(): Set<String>;
         fun manifests(): Map<String, Boolean>
-        fun namespaces(): Map<String, Namespace.Policy>
+        fun namespaces(): Map<String, Set<String>>
         fun changing(): Boolean
     }
 }

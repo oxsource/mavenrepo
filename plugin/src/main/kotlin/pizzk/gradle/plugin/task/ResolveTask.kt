@@ -7,7 +7,7 @@ class ResolveTask : TaskAction() {
     override fun title(): String = "Resolve"
     override fun execute(task: Task) {
         super.execute(task)
-        val api = MavenRepoApi.of(task.project) ?: return
+        val api = MavenRepoApi.get() ?: return
         task.doLast { api.resolve(force = true) }
     }
 }
