@@ -8,29 +8,30 @@ import pizzk.gradle.plugin.support.Repository
 import java.io.File
 import java.net.URI
 
-class MavenRepoApi(private val project: Project) {
+class MavenRepoApi(project: Project) {
     companion object {
-        const val NAME = "MavenRepoApi"
+        private const val NAME = "MavenRepoApi"
         private var handle: MavenRepoApi? = null
         fun get(): MavenRepoApi? = handle
+        fun setup(project: Project) {
+            val api = MavenRepoApi(project)
+            handle = api
+            project.afterEvaluate {
+                val scope = api.config.scope()
+                val wildcard = scope.firstOrNull()
+                val targets = when {
+                    wildcard.isNullOrEmpty() -> setOf(project)
+                    wildcard == Namespace.SCOPE_ALL -> setOf(project.rootProject)
+                    else -> project.rootProject.allprojects.filter { it.name == project.name || scope.contains(it.name) }
+                }
+                targets.forEach { it.extensions.add(NAME, this) }
+                println("extend `$NAME` for [${targets.joinToString { it.name }}]")
+            }
+        }
     }
 
     private val config: Config = MavenRepoExtension.create(project).config()
     private val caches: MutableList<Repository.Maven> = mutableListOf()
-    internal fun extend() {
-        project.afterEvaluate {
-            val scope = config.scope()
-            val wildcard = scope.firstOrNull()
-            val targets = when {
-                wildcard.isNullOrEmpty() -> setOf(project)
-                wildcard == Namespace.SCOPE_ALL -> setOf(project.rootProject)
-                else -> project.rootProject.allprojects.filter { it.name == project.name || scope.contains(it.name) }
-            }
-            handle = this
-            targets.forEach { it.extensions.add(NAME, this) }
-            println("extend `$NAME` for [${targets.joinToString { it.name }}]")
-        }
-    }
 
     fun config(): Config = config
     fun resolve(force: Boolean = true): List<Repository.Maven> {

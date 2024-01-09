@@ -16,7 +16,7 @@ class MavenRepoPlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        MavenRepoApi(project).extend()
+        MavenRepoApi.setup(project)
         MavenRepoTask(project).setup()
         project.afterEvaluate(MavenInject()::apply)
     }
