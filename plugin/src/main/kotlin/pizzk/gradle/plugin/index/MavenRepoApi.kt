@@ -91,6 +91,12 @@ class MavenRepoApi private constructor(project: Project) {
     }
 
     fun uri(name: String?): URI? = resolve(force = false).firstOrNull { it.name == name }?.url
+    fun dir(name: String?): String? {
+        name ?: return null
+        val contentsDir = File(PathContext.rootDir(), PathContext.CONTENTS_DIR)
+        return PathContext.namespaceDir(contentsDir, name).absolutePath
+    }
+
     interface Config {
         fun scope(): Set<String>;
         fun manifests(): Map<String, Boolean>
