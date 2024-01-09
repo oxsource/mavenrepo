@@ -6,13 +6,16 @@ class Namespace {
         const val SCOPE_CUR = "."
         private const val SPLIT = ":"
         private const val GROUP_DEFAULT = "default"
+        fun segment(s: String): Boolean = s.contains(SPLIT)
         fun split(s: String): Pair<String, String> {
             val parts = s.split(SPLIT)
             if (parts.size < 2) return Pair(GROUP_DEFAULT, s)
             return Pair(parts[0], parts[1])
         }
 
-        fun compose(group: String, name: String): String = "$group$SPLIT$name"
+        fun compose(group: String, name: String): String {
+            return if (group == GROUP_DEFAULT) name else "$group$SPLIT$name"
+        }
     }
 
     private val values: MutableMap<String, Set<String>> = mutableMapOf()

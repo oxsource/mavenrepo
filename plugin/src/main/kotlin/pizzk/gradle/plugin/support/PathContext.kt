@@ -4,11 +4,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import pizzk.gradle.plugin.extension.Namespace
 import java.io.File
+import java.net.URI
 import java.net.URL
 
 object PathContext {
     private const val JVM_USER_HOME = "user.home"
-    private const val HTTP = "http"
+    private const val SCHEMA_HTTP = "http"
+    private const val SCHEMA_FILE = "file"
     private const val BASE_DIR = ".m2repo"
     const val MANIFEST_DIR = "manifests"
     const val CONTENTS_DIR = "contents"
@@ -19,7 +21,12 @@ object PathContext {
         return File(dir, parts.joinToString(separator = File.separator))
     }
 
-    fun http(path: String): Boolean = path.startsWith(HTTP, ignoreCase = true)
+    fun url(uri: URI): String = when {
+        SCHEMA_FILE.equals(uri.scheme, true) -> File(uri).absolutePath
+        else -> uri.toURL().toString()
+    }
+
+    fun http(path: String): Boolean = path.startsWith(SCHEMA_HTTP, ignoreCase = true)
     fun download(url: String, dir: File, changing: Boolean): File? {
         return kotlin.runCatching {
             if (!dir.isDirectory) throw Exception("${dir.path} is not a directory")
