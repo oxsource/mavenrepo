@@ -1,16 +1,17 @@
-package pizzk.gradle.plugin
+package pizzk.gradle.plugin.index
 
 import org.gradle.api.Project
+import pizzk.gradle.plugin.MavenRepoPlugin
 import pizzk.gradle.plugin.extension.Manifest
 import pizzk.gradle.plugin.extension.Namespace
 
-abstract class MavenRepoExtension {
+abstract class MavenRepoConfig {
     private var scope: MutableSet<String> = mutableSetOf()
     private var changing: Boolean = true
     private val manifests = Manifest()
     private val namespace = Namespace()
 
-    private val config = object : MavenRepoApi.Config {
+    private val value = object : MavenRepoApi.Config {
         override fun scope(): Set<String> = scope
 
         override fun manifests(): Map<String, Boolean> = manifests.value()
@@ -37,12 +38,12 @@ abstract class MavenRepoExtension {
     fun manifestGitee(changing: Boolean) = manifests.gitee(changing)
     fun manifest(url: String, changing: Boolean) = manifests.url(url, changing)
     fun include(names: List<String>, scope: List<String>) = namespace.include(names, scope.toSet())
-    fun config(): MavenRepoApi.Config = config
-    override fun toString(): String = config.toString()
+    fun value(): MavenRepoApi.Config = value
+    override fun toString(): String = value.toString()
 
     companion object {
-        fun create(project: Project): MavenRepoExtension {
-            return project.extensions.create(MavenRepoPlugin.NAME, MavenRepoExtension::class.java)
+        fun create(project: Project): MavenRepoConfig {
+            return project.extensions.create(MavenRepoPlugin.NAME, MavenRepoConfig::class.java)
         }
     }
 }

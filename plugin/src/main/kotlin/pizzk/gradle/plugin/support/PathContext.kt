@@ -6,7 +6,7 @@ import pizzk.gradle.plugin.extension.Namespace
 import java.io.File
 import java.net.URL
 
-object MavenRepoPath {
+object PathContext {
     private const val JVM_USER_HOME = "user.home"
     private const val HTTP = "http"
     private const val BASE_DIR = ".m2repo"

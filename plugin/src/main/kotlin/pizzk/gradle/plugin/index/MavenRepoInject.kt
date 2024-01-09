@@ -1,11 +1,15 @@
-package pizzk.gradle.plugin.support
+package pizzk.gradle.plugin.index
 
 import org.gradle.api.Project
-import pizzk.gradle.plugin.MavenRepoApi
+import pizzk.gradle.plugin.PluginComponent
 import pizzk.gradle.plugin.extension.Namespace
 
-class MavenInject {
-    fun apply(project: Project) {
+class MavenRepoInject private constructor() {
+    companion object : PluginComponent {
+        override fun apply(project: Project) = project.afterEvaluate(MavenRepoInject()::setup)
+    }
+
+    private fun setup(project: Project) {
         val api = MavenRepoApi.get() ?: return
         val config = api.config()
         val namespaces = config.namespaces()

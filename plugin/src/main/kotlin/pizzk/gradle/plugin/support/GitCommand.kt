@@ -57,7 +57,7 @@ object GitCommand {
 
     fun sync(repository: Repository, dir: File): Repository.Maven? {
         if (!dir.isDirectory) throw Exception("${dir.path} is not a directory.")
-        val mavenDir = MavenRepoPath.namespaceDir(dir, repository.name)
+        val mavenDir = PathContext.namespaceDir(dir, repository.name)
         val url = remoteUrl(mavenDir)
         val success = if (repository.url != url) {
             if (mavenDir.exists()) {

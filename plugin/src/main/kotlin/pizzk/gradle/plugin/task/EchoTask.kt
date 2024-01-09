@@ -1,7 +1,7 @@
 package pizzk.gradle.plugin.task
 
 import org.gradle.api.Task
-import pizzk.gradle.plugin.MavenRepoApi
+import pizzk.gradle.plugin.index.MavenRepoApi
 
 class EchoTask : TaskAction() {
     override fun title(): String = "Echo"

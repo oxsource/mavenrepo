@@ -1,44 +1,46 @@
-package pizzk.gradle.plugin
+package pizzk.gradle.plugin.index
 
 import org.gradle.api.Project
+import pizzk.gradle.plugin.PluginComponent
 import pizzk.gradle.plugin.extension.Manifest
 import pizzk.gradle.plugin.extension.Namespace
-import pizzk.gradle.plugin.support.MavenRepoPath
+import pizzk.gradle.plugin.support.PathContext
 import pizzk.gradle.plugin.support.Repository
 import java.io.File
 import java.net.URI
 
-class MavenRepoApi(project: Project) {
-    companion object {
+class MavenRepoApi private constructor(project: Project) {
+    companion object : PluginComponent {
         private const val NAME = "MavenRepoApi"
-        private var handle: MavenRepoApi? = null
-        fun get(): MavenRepoApi? = handle
-        fun setup(project: Project) {
-            val api = MavenRepoApi(project)
-            handle = api
-            project.afterEvaluate {
-                val scope = api.config.scope()
-                val wildcard = scope.firstOrNull()
-                val targets = when {
-                    wildcard.isNullOrEmpty() -> setOf(project)
-                    wildcard == Namespace.SCOPE_ALL -> setOf(project.rootProject)
-                    else -> project.rootProject.allprojects.filter { it.name == project.name || scope.contains(it.name) }
-                }
-                targets.forEach { it.extensions.add(NAME, this) }
-                println("extend `$NAME` for [${targets.joinToString { it.name }}]")
-            }
+        private var instance: MavenRepoApi? = null
+        fun get(): MavenRepoApi? = instance
+        override fun apply(project: Project) {
+            val value = MavenRepoApi(project)
+            instance = value
+            project.afterEvaluate(value::setup)
         }
     }
 
-    private val config: Config = MavenRepoExtension.create(project).config()
+    private val config: Config = MavenRepoConfig.create(project).value()
     private val caches: MutableList<Repository.Maven> = mutableListOf()
+    private fun setup(project: Project) {
+        val scope = config.scope()
+        val wildcard = scope.firstOrNull()
+        val targets = when {
+            wildcard.isNullOrEmpty() -> setOf(project)
+            wildcard == Namespace.SCOPE_ALL -> setOf(project.rootProject)
+            else -> project.rootProject.allprojects.filter { it.name == project.name || scope.contains(it.name) }
+        }
+        targets.forEach { it.extensions.add(NAME, this) }
+        println("extend `$NAME` for [${targets.joinToString { it.name }}]")
+    }
 
     fun config(): Config = config
     fun resolve(force: Boolean = true): List<Repository.Maven> {
         if (!force && caches.isNotEmpty()) return caches
         //prepare local file path
-        val rootDir = MavenRepoPath.rootDir()
-        val manifestDir = File(rootDir, MavenRepoPath.MANIFEST_DIR)
+        val rootDir = PathContext.rootDir()
+        val manifestDir = File(rootDir, PathContext.MANIFEST_DIR)
         if (!manifestDir.exists()) manifestDir.mkdirs()
         val config: Config = config()
         //resolve manifests
@@ -49,7 +51,7 @@ class MavenRepoApi(project: Project) {
                 //special dir: ~/.m2repo/manifests/manifest.xml
                 path == Manifest.NAME -> File(manifestDir, path)
                 //http remote file will download into ~/.m2repo/manifests/xxx/manifest.xml
-                MavenRepoPath.http(path) -> MavenRepoPath.download(path, manifestDir, changing)
+                PathContext.http(path) -> PathContext.download(path, manifestDir, changing)
                 //other local dir
                 else -> File(path)
             }
@@ -73,10 +75,10 @@ class MavenRepoApi(project: Project) {
         println(repos.joinToString(separator = "\n", transform = Repository::toString))
         println()
         //sync repo
-        val contentsDir = File(rootDir, MavenRepoPath.CONTENTS_DIR)
+        val contentsDir = File(rootDir, PathContext.CONTENTS_DIR)
         if (!contentsDir.exists()) contentsDir.mkdirs()
         println("4/$total. sync repos:")
-        val values = repos.mapNotNull { MavenRepoPath.sync(it, contentsDir) }
+        val values = repos.mapNotNull { PathContext.sync(it, contentsDir) }
         println()
         //inject maven
         println("5/$total. transform mavens:")

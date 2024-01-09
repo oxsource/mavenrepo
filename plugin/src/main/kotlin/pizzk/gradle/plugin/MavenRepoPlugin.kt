@@ -5,7 +5,11 @@ package pizzk.gradle.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import pizzk.gradle.plugin.support.MavenInject
+import pizzk.gradle.plugin.index.MavenRepoApi
+import pizzk.gradle.plugin.index.MavenRepoInject
+import pizzk.gradle.plugin.index.MavenRepoTask
+
+interface PluginComponent : Plugin<Project>
 
 /**
  * 'maven repo' plugin.
@@ -16,8 +20,8 @@ class MavenRepoPlugin : Plugin<Project> {
     }
 
     override fun apply(project: Project) {
-        MavenRepoApi.setup(project)
-        MavenRepoTask(project).setup()
-        project.afterEvaluate(MavenInject()::apply)
+        MavenRepoApi.apply(project)
+        MavenRepoTask.apply(project)
+        MavenRepoInject.apply(project)
     }
 }

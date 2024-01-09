@@ -1,7 +1,7 @@
 package pizzk.gradle.plugin.task
 
 import org.gradle.api.Task
-import pizzk.gradle.plugin.support.MavenRepoPath
+import pizzk.gradle.plugin.support.PathContext
 import pizzk.gradle.plugin.extension.Manifest
 import java.io.File
 import java.io.InputStreamReader
@@ -13,14 +13,14 @@ class HelpTask : TaskAction() {
     override fun execute(task: Task) {
         super.execute(task)
         task.doLast {
-            val rootDir = MavenRepoPath.rootDir()
-            val manifestDir = File(rootDir, MavenRepoPath.MANIFEST_DIR)
-            val contentDir = File(rootDir, MavenRepoPath.CONTENTS_DIR)
+            val rootDir = PathContext.rootDir()
+            val manifestDir = File(rootDir, PathContext.MANIFEST_DIR)
+            val contentDir = File(rootDir, PathContext.CONTENTS_DIR)
             var i = 1
             println("---BASIC--")
             println("${i++}. local root dir: [${rootDir.path}];")
             println("${i}. manifest.xml config reference:")
-            val classLoader: ClassLoader = MavenRepoPath::class.java.getClassLoader()
+            val classLoader: ClassLoader = PathContext::class.java.getClassLoader()
             classLoader.getResourceAsStream("manifest.xml")?.use { ins ->
                 InputStreamReader(ins).readLines().forEach(System.out::println)
             }
