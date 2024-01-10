@@ -1,7 +1,5 @@
 package pizzk.gradle.plugin.index
 
-import org.gradle.api.Project
-import pizzk.gradle.plugin.MavenRepoPlugin
 import pizzk.gradle.plugin.extension.Manifest
 import pizzk.gradle.plugin.extension.Namespace
 
@@ -40,10 +38,4 @@ abstract class MavenRepoConfig {
     fun include(names: List<String>, scope: List<String>) = namespace.include(names, scope.toSet())
     fun value(): MavenRepoApi.Config = value
     override fun toString(): String = value.toString()
-
-    companion object {
-        fun create(project: Project): MavenRepoConfig {
-            return project.extensions.create(MavenRepoPlugin.NAME, MavenRepoConfig::class.java)
-        }
-    }
 }

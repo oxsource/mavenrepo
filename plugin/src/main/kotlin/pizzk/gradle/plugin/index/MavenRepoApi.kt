@@ -1,7 +1,9 @@
 package pizzk.gradle.plugin.index
 
 import org.gradle.api.Project
+import pizzk.gradle.plugin.MavenRepoPlugin
 import pizzk.gradle.plugin.PluginComponent
+import pizzk.gradle.plugin.comm.GlobalContext
 import pizzk.gradle.plugin.extension.Manifest
 import pizzk.gradle.plugin.extension.Namespace
 import pizzk.gradle.plugin.support.PathContext
@@ -12,28 +14,16 @@ import java.net.URI
 class MavenRepoApi private constructor(project: Project) {
     companion object : PluginComponent {
         private const val NAME = "MavenRepoApi"
-        private var instance: MavenRepoApi? = null
-        fun get(): MavenRepoApi? = instance
         override fun apply(project: Project) {
             val value = MavenRepoApi(project)
-            instance = value
-            project.afterEvaluate(value::setup)
+            GlobalContext.inject(value)
+            val join: (Project) -> Unit = { GlobalContext.joinExt(project, NAME, value) }
+            project.afterEvaluate(join)
         }
     }
 
-    private val config: Config = MavenRepoConfig.create(project).value()
+    private val config: Config = GlobalContext.createExt<MavenRepoConfig>(project, MavenRepoPlugin.NAME).value()
     private val caches: MutableList<Repository.Maven> = mutableListOf()
-    private fun setup(project: Project) {
-        val scope = config.scope()
-        val wildcard = scope.firstOrNull()
-        val targets = when {
-            wildcard.isNullOrEmpty() -> setOf(project)
-            wildcard == Namespace.SCOPE_ALL -> setOf(project.rootProject)
-            else -> project.rootProject.allprojects.filter { it.name == project.name || scope.contains(it.name) }
-        }
-        targets.forEach { it.extensions.add(NAME, this) }
-        println("extend `$NAME` for [${targets.joinToString { it.name }}]")
-    }
 
     fun config(): Config = config
     fun resolve(force: Boolean = true): List<Repository.Maven> {
@@ -92,7 +82,6 @@ class MavenRepoApi private constructor(project: Project) {
 
     fun uri(name: String?): URI? = resolve(force = false).firstOrNull { it.name == name }?.url
     fun url(name: String?): String = uri(name)?.let(PathContext::url).orEmpty()
-
     fun dir(name: String?): String {
         name ?: return ""
         if (!Namespace.segment(name)) return ""

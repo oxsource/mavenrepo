@@ -2,6 +2,7 @@ package pizzk.gradle.plugin.index
 
 import org.gradle.api.Project
 import pizzk.gradle.plugin.PluginComponent
+import pizzk.gradle.plugin.comm.GlobalContext
 import pizzk.gradle.plugin.extension.Namespace
 
 class MavenRepoInject private constructor() {
@@ -10,7 +11,7 @@ class MavenRepoInject private constructor() {
     }
 
     private fun setup(project: Project) {
-        val api = MavenRepoApi.get() ?: return
+        val api = GlobalContext.value<MavenRepoApi>() ?: return
         val config = api.config()
         val namespaces = config.namespaces()
         val projects = project.rootProject.allprojects
