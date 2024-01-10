@@ -8,6 +8,7 @@ import pizzk.gradle.plugin.extension.Manifest
 import pizzk.gradle.plugin.extension.Namespace
 import pizzk.gradle.plugin.support.PathContext
 import pizzk.gradle.plugin.support.Repository
+import pizzk.gradle.plugin.support.ScriptContext
 import java.io.File
 import java.net.URI
 
@@ -89,6 +90,8 @@ class MavenRepoApi private constructor(project: Project) {
         return PathContext.namespaceDir(contentsDir, name).absolutePath
     }
 
+    fun scripts(): ScriptContext = ScriptContext
+    fun script(project: Project, repo: String): ScriptContext.Script = ScriptContext.Script(project, repo)
     interface Config {
         fun scope(): Set<String>;
         fun manifests(): Map<String, Boolean>
